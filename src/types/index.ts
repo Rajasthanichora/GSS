@@ -7,6 +7,10 @@ export interface CalculationResult {
 export interface InputValues {
   mw: string;
   mva: string;
+  today33?: string;
+  previous33?: string;
+  today132?: string;
+  previous132?: string;
 }
 
 export interface ConsumptionInputs {

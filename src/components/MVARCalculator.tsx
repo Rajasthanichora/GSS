@@ -42,7 +42,7 @@ export const MVARCalculator: React.FC = () => {
     if (!activeNumpad || (activeNumpad !== 'mw' && activeNumpad !== 'mva')) return;
 
     setValues(prev => {
-      const currentValue = prev[activeNumpad as keyof InputValues];
+      const currentValue = prev[activeNumpad as keyof InputValues] || '';
       
       if (value === '.' && currentValue.includes('.')) {
         return prev;
@@ -72,26 +72,30 @@ export const MVARCalculator: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.numpad-container')) {
+      if (!target.closest('.numpad-container') && !target.closest('.adjustment-dropdown')) {
         closeNumpad();
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    if (activeNumpad) {
+      document.addEventListener('click', handleClickOutside, true);
+      return () => document.removeEventListener('click', handleClickOutside, true);
+    }
+  }, [activeNumpad]);
 
   return (
-    <div className="space-y-4 sm:space-y-6 w-full overflow-hidden relative">
+    <div className="space-y-4 sm:space-y-6 w-full overflow-hidden relative min-h-[625px] pb-20">
       {/* Input Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* MW Input */}
         <div className="numpad-container relative">
-          <label className="block text-text-primary text-lg font-semibold mb-3 flex items-center gap-2">
+          <label htmlFor="mw-input" className="block text-text-primary text-lg font-semibold mb-3 flex items-center gap-2">
             <span className="text-xl">⚡</span>
             MW (Megawatts)
           </label>
           <input
+            id="mw-input"
+            name="mw"
             type="text"
             value={values.mw}
             onClick={() => handleInputClick('mw')}
@@ -116,11 +120,13 @@ export const MVARCalculator: React.FC = () => {
 
         {/* MVA Input */}
         <div className="numpad-container relative">
-          <label className="block text-text-primary text-lg font-semibold mb-3 flex items-center gap-2">
+          <label htmlFor="mva-input" className="block text-text-primary text-lg font-semibold mb-3 flex items-center gap-2">
             <span className="text-xl">🔌</span>
             MVA (Megavolt-Amperes)
           </label>
           <input
+            id="mva-input"
+            name="mva"
             type="text"
             value={values.mva}
             onClick={() => handleInputClick('mva')}

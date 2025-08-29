@@ -42,7 +42,7 @@ export const Calculator: React.FC = () => {
     if (!activeNumpad) return;
 
     setValues(prev => {
-      const currentValue = prev[activeNumpad];
+      const currentValue = prev[activeNumpad] || '';
       
       // Prevent multiple decimal points
       if (value === '.' && currentValue.includes('.')) {

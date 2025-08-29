@@ -25,7 +25,7 @@ export const Numpad: React.FC<NumpadProps> = ({ isVisible, onNumberClick, onClea
   if (!isVisible) return null;
 
   return (
-    <div className="absolute top-full left-0 right-0 z-[99999] mt-2 animate-slide-down">
+    <div className="absolute top-full left-0 right-0 z-[9999] mt-2 animate-slide-down">
       <div 
         className="bg-surface-primary border-2 border-border rounded-2xl p-4 shadow-2xl mx-auto max-w-[300px] w-full"
       >

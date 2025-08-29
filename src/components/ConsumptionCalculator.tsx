@@ -50,24 +50,28 @@ export const ConsumptionCalculator: React.FC = () => {
       };
     }
 
-    // Calculate 33kV values
+    // Calculate 33kV values (always use original inputs)
     const diff33 = today33 - previous33;
     const net33 = diff33 * 1000;
 
-    let today132_adj = today132;
-    let targetDifference = 0;
+    let today132_adj = today132; // Start with original input
 
-    // Handle adjustments - preserve all input values and only adjust today132
+    // Handle adjustments - preserve today33, previous33, previous132 unchanged
+    // Only modify today132 in backend calculation
     if (inputs.adjustment !== 'Auto') {
       if (inputs.adjustment === 'Equal') {
-        targetDifference = 0;
+        // For Equal: net132 should equal net33 exactly
+        // net132 = net33, so (today132_adj - previous132) * 4000 = net33
+        // Therefore: today132_adj = previous132 + net33 / 4000
+        today132_adj = previous132 + net33 / 4000;
       } else {
-        targetDifference = parseInt(inputs.adjustment);
+        // For numeric values: net132 should be less than net33 by the adjustment amount
+        // net33 - net132 = adjustment, so net132 = net33 - adjustment
+        // (today132_adj - previous132) * 4000 = net33 - adjustment
+        // Therefore: today132_adj = previous132 + (net33 - adjustment) / 4000
+        const adjustment = parseInt(inputs.adjustment);
+        today132_adj = previous132 + (net33 - adjustment) / 4000;
       }
-
-      // Calculate adjusted Today132 to achieve exact target difference
-      // Formula: today132_adj = previous132 + (net33 + targetDifference) / 4000
-      today132_adj = previous132 + (net33 + targetDifference) / 4000;
 
       // Validate adjusted value
       if (today132_adj < 0) {
@@ -93,7 +97,7 @@ export const ConsumptionCalculator: React.FC = () => {
     // Calculate 132kV values
     const diff132 = today132_adj - previous132;
     const net132 = diff132 * 4000;
-    const displayedDifference = net132 - net33;
+    const displayedDifference = Math.abs(net33 - net132);
 
     return {
       diff33,
@@ -160,14 +164,16 @@ export const ConsumptionCalculator: React.FC = () => {
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+    if (activeNumpad) {
+      document.addEventListener('click', handleClickOutside, true);
+      return () => document.removeEventListener('click', handleClickOutside, true);
+    }
+  }, [activeNumpad]);
 
   return (
     <div className="space-y-4 sm:space-y-8 w-full overflow-x-hidden">
       {/* 33 kV Incomer Section */}
-      <div className="bg-surface-secondary/30 backdrop-blur-xl border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl">
+      <div className="bg-surface-secondary/30 backdrop-blur-xl border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 relative z-10" style={{boxShadow: 'rgba(0, 0, 0, 0.25) 0px 21px 28px -38px'}}>
         <h3 className="text-lg sm:text-xl font-bold text-text-primary mb-4 sm:mb-6 flex items-center gap-2">
           <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
           33 kV Incomer
@@ -175,8 +181,10 @@ export const ConsumptionCalculator: React.FC = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
           <div className="numpad-container relative">
-            <label className="block text-text-primary font-semibold mb-3">Today33</label>
+            <label htmlFor="today33-input" className="block text-text-primary font-semibold mb-3">Today 33Kv</label>
             <input
+              id="today33-input"
+              name="today33"
               type="text"
               value={inputs.today33}
               onClick={() => handleInputClick('today33')}
@@ -199,8 +207,10 @@ export const ConsumptionCalculator: React.FC = () => {
           </div>
 
           <div className="numpad-container relative">
-            <label className="block text-text-primary font-semibold mb-3">Previous33</label>
+            <label htmlFor="previous33-input" className="block text-text-primary font-semibold mb-3">Previous 33Kv</label>
             <input
+              id="previous33-input"
+              name="previous33"
               type="text"
               value={inputs.previous33}
               onClick={() => handleInputClick('previous33')}
@@ -225,18 +235,18 @@ export const ConsumptionCalculator: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div className="p-3 sm:p-4 bg-surface-primary/50 rounded-xl border border-border">
-            <label className="block text-text-secondary text-sm mb-1">Diff33</label>
-            <div className="text-lg sm:text-xl font-mono text-text-primary">{results.diff33.toFixed(1)}</div>
+            <label className="block text-text-secondary text-sm mb-1">Difference 33Kv</label>
+            <div className="text-lg sm:text-xl font-mono text-text-primary">{results.diff33.toFixed(2)}</div>
           </div>
           <div className="p-3 sm:p-4 bg-surface-primary/50 rounded-xl border border-border">
-            <label className="block text-text-secondary text-sm mb-1">Net33</label>
-            <div className="text-lg sm:text-xl font-mono text-primary font-bold">{results.net33.toFixed(1)}</div>
+            <label className="block text-text-secondary text-sm mb-1">Net Consumpation 33Kv</label>
+            <div className="text-lg sm:text-xl font-mono text-primary font-bold">{results.net33.toFixed(2)}</div>
           </div>
         </div>
       </div>
 
       {/* 132 kV Transformer Section */}
-      <div className="bg-surface-secondary/30 backdrop-blur-xl border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl">
+      <div className="bg-surface-secondary/30 backdrop-blur-xl border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 relative z-5" style={{boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)'}}>
         <h3 className="text-lg sm:text-xl font-bold text-text-primary mb-4 sm:mb-6 flex items-center gap-2">
           <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
           132 kV Transformer
@@ -244,8 +254,10 @@ export const ConsumptionCalculator: React.FC = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
           <div className="numpad-container relative">
-            <label className="block text-text-primary font-semibold mb-3">Today132</label>
+            <label htmlFor="today132-input" className="block text-text-primary font-semibold mb-3">Today 132Kv</label>
             <input
+              id="today132-input"
+              name="today132"
               type="text"
               value={inputs.today132}
               onClick={() => handleInputClick('today132')}
@@ -268,8 +280,10 @@ export const ConsumptionCalculator: React.FC = () => {
           </div>
 
           <div className="numpad-container relative">
-            <label className="block text-text-primary font-semibold mb-3">Previous132</label>
+            <label htmlFor="previous132-input" className="block text-text-primary font-semibold mb-3">Previous 132Kv</label>
             <input
+              id="previous132-input"
+              name="previous132"
               type="text"
               value={inputs.previous132}
               onClick={() => handleInputClick('previous132')}
@@ -292,16 +306,18 @@ export const ConsumptionCalculator: React.FC = () => {
           </div>
 
           <div className="adjustment-dropdown">
-            <label className="block text-text-primary font-semibold mb-3 flex items-center gap-2">
+            <label htmlFor="adjustment-select" className="block text-text-primary font-semibold mb-3 flex items-center gap-2">
               Adjustment
               <div className="relative group">
                 <Info className="w-4 h-4 text-text-secondary cursor-help" />
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-surface-primary border border-border rounded-lg text-sm text-text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                  Auto = no adjustment, Equal = match Net values, numeric = force that difference
+                Made By Ravi
                 </div>
               </div>
             </label>
             <select
+              id="adjustment-select"
+              name="adjustment"
               value={inputs.adjustment}
               onChange={(e) => setInputs(prev => ({ ...prev, adjustment: e.target.value as ConsumptionInputs['adjustment'] }))}
               className="w-full p-4 bg-surface-primary border-2 border-border rounded-xl text-lg text-text-primary focus:border-primary focus:outline-none transition-all duration-300"
@@ -319,31 +335,24 @@ export const ConsumptionCalculator: React.FC = () => {
 
         {inputs.adjustment !== 'Auto' && (
           <div className="mb-6 p-4 bg-primary/10 border border-primary/30 rounded-xl">
-            <div className="flex items-center gap-2 mb-2">
-              <Info className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-text-primary">Adjustment Applied</span>
-            </div>
-            <div className="text-sm text-text-secondary">
-              Today132_adj = Previous132 + (Net33 + {inputs.adjustment === 'Equal' ? '0' : inputs.adjustment}) / 4000
-            </div>
-            <div className="text-lg font-mono text-primary mt-2">
-              Today132_adj: {results.today132_adj.toFixed(1)}
+            <div className="text-base font-mono text-primary font-bold">
+              Change Today = {results.today132_adj.toFixed(2)}
             </div>
           </div>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="p-3 sm:p-4 bg-surface-primary/50 rounded-xl border border-border">
-            <label className="block text-text-secondary text-sm mb-1">Diff132</label>
-            <div className="text-lg sm:text-xl font-mono text-text-primary">{results.diff132.toFixed(1)}</div>
+            <label className="block text-text-secondary text-sm mb-1">Difference 132Kv</label>
+            <div className="text-lg sm:text-xl font-mono text-text-primary">{results.diff132.toFixed(2)}</div>
           </div>
           <div className="p-3 sm:p-4 bg-surface-primary/50 rounded-xl border border-border">
-            <label className="block text-text-secondary text-sm mb-1">Net132</label>
-            <div className="text-lg sm:text-xl font-mono text-primary font-bold">{results.net132.toFixed(1)}</div>
+            <label className="block text-text-secondary text-sm mb-1">Net Consumpation 132Kv</label>
+            <div className="text-lg sm:text-xl font-mono text-primary font-bold">{results.net132.toFixed(2)}</div>
           </div>
           <div className="p-3 sm:p-4 bg-surface-primary/50 rounded-xl border border-border">
-            <label className="block text-text-secondary text-sm mb-1">Difference</label>
-            <div className="text-lg sm:text-xl font-mono text-text-primary font-bold">{results.displayedDifference.toFixed(1)}</div>
+            <label className="block text-text-secondary text-sm mb-1">Overall Consumpation Difference</label>
+            <div className="text-lg sm:text-xl font-mono text-text-primary font-bold">{results.displayedDifference.toFixed(2)}</div>
           </div>
         </div>
 
