@@ -9,7 +9,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',              // 👈 Auto service worker inject karega
-      manifestFilename: 'manifest.webmanifest', // 👈 Manifest ka naam fix
+      manifestFilename: 'manifest.json', // 👈 Manifest ka naam fix
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
         name: 'GSS',
