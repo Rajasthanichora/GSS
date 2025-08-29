@@ -1,0 +1,14 @@
+{
+  "name": "GSS",
+  "short_name": "GSS",
+  "description": "My Grid Substation PWA",
+  "icons": [
+    { "src": "pwa-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "pwa-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "start_url": "/GSS/",
+  "scope": "/GSS/",
+  "display": "standalone",
+  "theme_color": "#06b6d4",
+  "background_color": "#ffffff"
+}
