@@ -2,14 +2,15 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: '/GSS/',  // 👈 GitHub Pages ke liye
+  base: '/GSS/', // 👈 GitHub Pages ke liye
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'robots.txt'],
+      injectRegister: 'auto',              // 👈 Auto service worker inject karega
+      manifestFilename: 'manifest.webmanifest', // 👈 Manifest ka naam fix
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
         name: 'GSS',
         short_name: 'GSS',
@@ -17,7 +18,8 @@ export default defineConfig({
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/GSS/',
+        scope: '/GSS/',        // 👈 scope bhi /GSS/ hona chahiye
+        start_url: '/GSS/',    // 👈 same as repo path
         icons: [
           {
             src: 'pwa-192x192.png',
