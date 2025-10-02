@@ -5,11 +5,12 @@ import { ThemeSelector } from './components/ThemeSelector';
 import { Navigation } from './components/Navigation';
 import { MVARCalculator } from './components/MVARCalculator';
 import { ConsumptionCalculator } from './components/ConsumptionCalculator';
+import { LogsheetCalculator } from './components/LogsheetCalculator';
 import { useTheme } from './hooks/useTheme';
 
 function App() {
   const [showAnimation, setShowAnimation] = useState(true);
-  const [activeTab, setActiveTab] = useState<'mvar' | 'consumption'>('mvar');
+  const [activeTab, setActiveTab] = useState<'mvar' | 'consumption' | 'logsheet'>('mvar');
   const { theme, setTheme } = useTheme();
 
   const handleAnimationComplete = useCallback(() => {
@@ -33,7 +34,6 @@ function App() {
                     GSS
                   </h1>
                 </div>
-                
                 <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                   <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
                   <ThemeSelector theme={theme} onThemeChange={setTheme} />
@@ -46,7 +46,9 @@ function App() {
           <main className="w-full px-2 sm:px-4 py-4 sm:py-8 overflow-x-hidden">
             <div className="max-w-4xl mx-auto">
               <div className="bg-surface-primary/30 backdrop-blur-xl border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl">
-                {activeTab === 'mvar' ? <MVARCalculator /> : <ConsumptionCalculator />}
+                {activeTab === 'mvar' && <MVARCalculator />}
+                {activeTab === 'consumption' && <ConsumptionCalculator />}
+                {activeTab === 'logsheet' && <LogsheetCalculator />}
               </div>
             </div>
           </main>
