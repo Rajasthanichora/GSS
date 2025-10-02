@@ -1,15 +1,16 @@
 import React from 'react';
-import { Calculator, Activity } from 'lucide-react';
+import { Calculator, Activity, ListChecks } from 'lucide-react';
 
 interface NavigationProps {
-  activeTab: 'mvar' | 'consumption';
-  onTabChange: (tab: 'mvar' | 'consumption') => void;
+  activeTab: 'mvar' | 'consumption' | 'logsheet';
+  onTabChange: (tab: 'mvar' | 'consumption' | 'logsheet') => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'mvar' as const, label: 'MVAR Calculator', icon: Calculator },
     { id: 'consumption' as const, label: 'Consumption', icon: Activity },
+    { id: 'logsheet' as const, label: 'Logsheet Calculate', icon: ListChecks },
   ];
 
   return (
