@@ -204,8 +204,51 @@ select:focus {
 }
 
 /* Prevent body scroll when numpad is open */
-body.numpad-open {
-  overflow: hidden !important;
-  position: fixed !important;
-  width: 100% !important;
+  body.numpad-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+  }
+
+/* From Uiverse.io by moasko */
+.loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 360px 400px;
+  border: 12px solid;
+  position: absolute;
+}
+
+.c1 {
+  animation: rota 2.2s linear infinite;
+  border-color: orange;
+}
+
+.c2 {
+  animation: rota 3s linear infinite;
+  border-color: red;
+}
+
+.c3 {
+  animation: rota 2s linear infinite;
+  border-color: #fff;
+  opacity: 0.5;
+}
+.c4 {
+  animation: rota 1s linear infinite;
+  border-color: white;
+  opacity: 0.8;
+}
+@keyframes rota {
+  100% {
+    transform: rotate(360deg);
+  }
 }
