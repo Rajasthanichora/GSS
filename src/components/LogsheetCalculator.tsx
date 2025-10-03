@@ -17,7 +17,7 @@ export const LogsheetCalculator: React.FC = () => {
 
   const onPick = (ref: React.RefObject<HTMLInputElement>) => ref.current?.click();
 
-  const N8N_WEBHOOK = 'https://n8n.arisey.fun/webhook/4aff391c-cafd-40ae-8271-21b53115b35a';
+  const N8N_WEBHOOK = 'https://n8n.arisey.fun/webhook-test/4aff391c-cafd-40ae-8271-21b53115b35a';
   // Optional: a status endpoint that returns final text when ready
   // Configure in n8n as a separate Webhook node, e.g., GET /webhook-test/logsheet-status
   const N8N_STATUS_WEBHOOK = 'https://n8n.arisey.fun/webhook-test/logsheet-status';
