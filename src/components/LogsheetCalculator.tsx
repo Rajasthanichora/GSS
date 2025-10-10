@@ -21,7 +21,7 @@ export const LogsheetCalculator: React.FC = () => {
   const N8N_WEBHOOK = 'http://arisey.fun/webhook-test/f18fc7bf-b29e-4b73-9f85-c01f260a19ed';
   // Optional: a status endpoint that returns final text when ready
   // Configure in n8n as a separate Webhook node, e.g., GET /webhook-test/logsheet-status
-  const N8N_STATUS_WEBHOOK = '';
+  const N8N_STATUS_WEBHOOK = 'http://arisey.fun/webhook/868647c7-5da9-4009-879a-8fde9e830f6f';
 
   // Supabase REST credentials (public anon key is safe for client)
   const SUPABASE_URL = 'https://pxkuyafnamjpehtwalrp.supabase.co';
