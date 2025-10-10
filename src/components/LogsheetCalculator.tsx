@@ -18,10 +18,21 @@ export const LogsheetCalculator: React.FC = () => {
 
   const onPick = (ref: React.RefObject<HTMLInputElement>) => ref.current?.click();
 
-  const N8N_WEBHOOK = 'http://arisey.fun/webhook-test/f18fc7bf-b29e-4b73-9f85-c01f260a19ed';
-  // Optional: a status endpoint that returns final text when ready
-  // Configure in n8n as a separate Webhook node, e.g., GET /webhook-test/logsheet-status
-  const N8N_STATUS_WEBHOOK = 'http://arisey.fun/webhook/868647c7-5da9-4009-879a-8fde9e830f6f';
+  // Prefer env-configured URLs. Force HTTPS when the app is served over HTTPS to avoid mixed-content blocking on GitHub Pages.
+  const ensureHttps = (url: string) => {
+    try {
+      if (typeof window !== 'undefined' && window.location.protocol === 'https:' && url.startsWith('http://')) {
+        return url.replace(/^http:\/\//i, 'https://');
+      }
+    } catch {}
+    return url;
+  };
+
+  const RAW_N8N_WEBHOOK = (import.meta as any).env?.VITE_N8N_WEBHOOK || 'https://arisey.fun/webhook-test/9e516c34-317c-479a-be48-9874b3caf154';
+  const RAW_N8N_STATUS_WEBHOOK = (import.meta as any).env?.VITE_N8N_STATUS_WEBHOOK || 'https://arisey.fun/webhook-test/9e516c34-317c-479a-be48-9874b3caf154';
+
+  const N8N_WEBHOOK = ensureHttps(RAW_N8N_WEBHOOK);
+  const N8N_STATUS_WEBHOOK = ensureHttps(RAW_N8N_STATUS_WEBHOOK);
 
   // Supabase REST credentials (public anon key is safe for client)
   const SUPABASE_URL = 'https://pxkuyafnamjpehtwalrp.supabase.co';
