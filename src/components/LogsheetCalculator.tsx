@@ -28,8 +28,8 @@ export const LogsheetCalculator: React.FC = () => {
     return url;
   };
 
-  const RAW_N8N_WEBHOOK = (import.meta as any).env?.VITE_N8N_WEBHOOK || 'https://arisey.fun/webhook-test/9e516c34-317c-479a-be48-9874b3caf154';
-  const RAW_N8N_STATUS_WEBHOOK = (import.meta as any).env?.VITE_N8N_STATUS_WEBHOOK || 'https://arisey.fun/webhook-test/9e516c34-317c-479a-be48-9874b3caf154';
+  const RAW_N8N_WEBHOOK = (import.meta as any).env?.VITE_N8N_WEBHOOK || 'https://arisey.fun/webhook/9e516c34-317c-479a-be48-9874b3caf154';
+  const RAW_N8N_STATUS_WEBHOOK = (import.meta as any).env?.VITE_N8N_STATUS_WEBHOOK || 'https://arisey.fun/webhook/9e516c34-317c-479a-be48-9874b3caf154';
 
   const N8N_WEBHOOK = ensureHttps(RAW_N8N_WEBHOOK);
   const N8N_STATUS_WEBHOOK = ensureHttps(RAW_N8N_STATUS_WEBHOOK);
