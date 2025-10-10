@@ -18,10 +18,10 @@ export const LogsheetCalculator: React.FC = () => {
 
   const onPick = (ref: React.RefObject<HTMLInputElement>) => ref.current?.click();
 
-  const N8N_WEBHOOK = 'https://n8n.arisey.fun/webhook-test/4aff391c-cafd-40ae-8271-21b53115b35a';
+  const N8N_WEBHOOK = 'http://arisey.fun/webhook-test/f18fc7bf-b29e-4b73-9f85-c01f260a19ed';
   // Optional: a status endpoint that returns final text when ready
   // Configure in n8n as a separate Webhook node, e.g., GET /webhook-test/logsheet-status
-  const N8N_STATUS_WEBHOOK = 'https://n8n.arisey.fun/webhook/5aefd755-bab2-4979-8694-0b64565eb609';
+  const N8N_STATUS_WEBHOOK = 'http://arisey.fun/webhook-test/f18fc7bf-b29e-4b73-9f85-c01f260a19ed';
 
   // Supabase REST credentials (public anon key is safe for client)
   const SUPABASE_URL = 'https://pxkuyafnamjpehtwalrp.supabase.co';
